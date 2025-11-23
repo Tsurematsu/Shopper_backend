@@ -26,7 +26,11 @@ COPY ./workspace/composer.json ./workspace/composer.lock* ./
 # Instalar dependencias de Composer
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
+# Actualizar autoload de Composer
 RUN composer dump-autoload --optimize
+
+# Generar migraciones y ejecutar migraciones
+RUN php migrate.php
 
 # Configurar permisos
 RUN chown -R www-data:www-data /var/www/html
