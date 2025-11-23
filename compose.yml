@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  php-server:
+    build:
+      context: .
+      dockerfile: Containerfile
+    container_name: php-app
+    ports:
+      - "8080:80"
+    volumes:
+      - ./workspace:/var/www/html
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres-db
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    env_file:
+          - .env
