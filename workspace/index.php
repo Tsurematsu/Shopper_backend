@@ -1,6 +1,7 @@
 <?php
 require __DIR__ . '/vendor/autoload.php';
-require __DIR__ . '/config/database.php';
+
+use App\Config\Database;
 
 use Slim\Factory\AppFactory;
 use Psr\Http\Message\ResponseInterface as Response;
