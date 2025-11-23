@@ -3,5 +3,8 @@
         "slim/slim": "4.*",
         "slim/psr7": "^1.6",
         "illuminate/database": "^12.39"
+    },
+    "require-dev": {
+        "phing/phing": "^3.1"
     }
 }
