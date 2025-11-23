@@ -1,8 +1,14 @@
 <?php
 require __DIR__ . '/vendor/autoload.php';
-require __DIR__ . '/config/database.php';
 
-// Ejecutar todas las migraciones
+use App\Config\Database;
+
+// Inicializar conexión
+Database::init();
+
+echo "🚀 Ejecutando migraciones...\n\n";
+
+// Ejecutar migración de usuarios
 require __DIR__ . '/migrations/CreateUsersTable.php';
 
-echo "✅ Migraciones ejecutadas\n";
+echo "\n✅ Migraciones completadas\n";
