@@ -14,9 +14,11 @@ $app->add(new JsonMiddleware());
 
 // Ruta GET simple
 $app->get('/', function (Request $request, Response $response) {
-    return $response->getBody()->write(json_encode([
+    $response->getBody()->write(json_encode([
         'message' => 'Hola a todo el Mundo'
     ]));
+
+    return $response;
 });
 
 // Cargar rutas de Personas usando el método estático

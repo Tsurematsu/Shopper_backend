@@ -10,9 +10,11 @@ class PersonasController
     {
         
 
-        return $response->getBody()->write(json_encode([
+        $response->getBody()->write(json_encode([
             'message' => 'Hola, esta es una prueba de la ruta /api/personas'
         ]));
+
+        return $response;
     }
 
     public function show(Request $request, Response $response, $args)
