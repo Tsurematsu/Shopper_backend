@@ -9,7 +9,7 @@ $app = AppFactory::create();
 
 // Ruta GET simple
 $app->get('/', function (Request $request, Response $response) {
-    $response->getBody()->write(json_encode(['message' => 'Hola Mundo']));
+    $response->getBody()->write(json_encode(['message' => 'Hola a todo el Mundo']));
     return $response->withHeader('Content-Type', 'application/json');
 });
 
