@@ -31,6 +31,5 @@ RUN composer dump-autoload --optimize
 
 # Generar migraciones y ejecutar migraciones
 RUN php migrate.php
-
 # Configurar permisos
 RUN chown -R www-data:www-data /var/www/html

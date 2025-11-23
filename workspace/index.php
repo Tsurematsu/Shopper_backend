@@ -5,6 +5,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use App\Middleware\JsonMiddleware;
 use App\Config\Database;
+use Illuminate\Database\Capsule\Manager as DB;
 
 use App\Api\Personas;
 use App\Api\Session;
