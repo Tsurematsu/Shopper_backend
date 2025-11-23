@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Containerfile
-    container_name: php-app
+    container_name: php-shopper
     ports:
       - "8080:80"
     volumes:
@@ -19,7 +19,7 @@ services:
 
   postgres:
     image: postgres:15-alpine
-    container_name: postgres-db
+    container_name: postgres-db-shopper
     ports:
       - "5432:5432"
     volumes:

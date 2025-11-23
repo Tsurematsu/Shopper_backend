@@ -18,7 +18,13 @@ RUN a2enmod rewrite
 # Configurar el DocumentRoot
 ENV APACHE_DOCUMENT_ROOT /var/www/html
 
+WORKDIR /var/www/html
+
+# Copiar archivos de Composer primero (para aprovechar cache de Docker)
+COPY ./workspace/composer.json ./workspace/composer.lock* ./
+
+# Instalar dependencias de Composer
+RUN composer install --no-dev --optimize-autoloader --no-interaction
+
 # Configurar permisos
 RUN chown -R www-data:www-data /var/www/html
-
-WORKDIR /var/www/html
