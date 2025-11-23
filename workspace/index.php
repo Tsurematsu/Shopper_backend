@@ -3,9 +3,12 @@ require __DIR__ . '/vendor/autoload.php';
 use Slim\Factory\AppFactory;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use App\Config\Database;
-use App\Api\Personas;
 use App\Middleware\JsonMiddleware;
+use App\Config\Database;
+
+use App\Api\Personas;
+use App\Api\Session;
+
 
 Database::init();
 
@@ -25,6 +28,10 @@ $app->get('/', function (Request $request, Response $response) {
 // Cargar rutas de Personas usando el método estático
 $app->group('/api/personas', function ($group) {
     Personas::getRoutes($group);
+});
+
+$app->group('/api/session', function ($group) {
+    Session::getRoutes($group);
 });
 
 
