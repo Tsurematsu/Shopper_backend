@@ -9,7 +9,6 @@ class PersonasController
     public function index(Request $request, Response $response)
     {
         
-
         $response->getBody()->write(json_encode([
             'message' => 'Hola, esta es una prueba de la ruta /api/personas'
         ]));
