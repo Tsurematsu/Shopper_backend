@@ -12,7 +12,6 @@ class PersonasController
         $response->getBody()->write(json_encode([
             'message' => 'Hola, esta es una prueba de la ruta /api/personas'
         ]));
-
         return $response;
     }
 
@@ -34,3 +33,13 @@ class PersonasController
     {
     }
 }
+
+
+// $data = json_decode($request->getBody());
+        
+//         $user = User::create([
+//             'name' => $data->name,
+//             'email' => $data->email,
+//             'hash_password' => password_hash($data->password, PASSWORD_BCRYPT),
+//             'is_admin' => $data->is_admin ?? false
+//         ]);

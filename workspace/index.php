@@ -10,6 +10,7 @@ use App\Middleware\JsonMiddleware;
 Database::init();
 
 $app = AppFactory::create();
+
 $app->add(new JsonMiddleware());
 
 // Ruta GET simple
