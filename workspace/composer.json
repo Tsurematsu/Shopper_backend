@@ -6,5 +6,10 @@
     },
     "require-dev": {
         "phing/phing": "^3.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
     }
 }
