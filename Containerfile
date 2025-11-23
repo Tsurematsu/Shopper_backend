@@ -26,5 +26,7 @@ COPY ./workspace/composer.json ./workspace/composer.lock* ./
 # Instalar dependencias de Composer
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
+RUN composer dump-autoload --optimize
+
 # Configurar permisos
 RUN chown -R www-data:www-data /var/www/html
