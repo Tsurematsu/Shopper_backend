@@ -9,8 +9,8 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Instalar Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# Instalar Composer manualmente
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
 
 # Habilitar mod_rewrite de Apache
 RUN a2enmod rewrite
@@ -29,13 +29,9 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction
 # Actualizar autoload de Composer
 RUN composer dump-autoload --optimize
 
-# Generar migraciones y ejecutar migraciones
-RUN php migrate.php
 # Configurar permisos
 RUN chown -R www-data:www-data /var/www/html
 
-RUN mkdir -p /var/www/html/uploads && \
-    chmod 777 /var/www/html/uploads && \
-    chown -R www-data:www-data /var/www/html/uploads
-
-# RUN chmod -R 777 uploads/
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod 777 /usr/local/bin/docker-entrypoint.sh
+ENTRYPOINT ["docker-entrypoint.sh"]
