@@ -33,3 +33,9 @@ RUN composer dump-autoload --optimize
 RUN php migrate.php
 # Configurar permisos
 RUN chown -R www-data:www-data /var/www/html
+
+RUN mkdir -p /var/www/html/uploads && \
+    chmod 777 /var/www/html/uploads && \
+    chown -R www-data:www-data /var/www/html/uploads
+
+# RUN chmod -R 777 uploads/
