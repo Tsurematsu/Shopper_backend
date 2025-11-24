@@ -56,9 +56,9 @@ $app->post('/api/upload', function (Request $request, Response $response) {
 $app->add(new JsonMiddleware());
 
 // Ruta GET simple
-$app->get('/', function (Request $request, Response $response) {
+$app->get('/api', function (Request $request, Response $response) {
     $response->getBody()->write(json_encode([
-        'message' => 'Hola a todo el Mundo'
+        'message' => '/api => API de Shopper Funcionando correctamente ip :' . $request->getServerParams()['REMOTE_ADDR'] .' '. $request->getUri()
     ]));
 
     return $response;
