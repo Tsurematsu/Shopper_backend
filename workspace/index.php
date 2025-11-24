@@ -9,6 +9,8 @@ use Illuminate\Database\Capsule\Manager as DB;
 
 use App\Api\Personas;
 use App\Api\Session;
+use App\Api\Carrito;
+use App\Api\Productos;
 use App\Helpers\FileUploader;
 
 
@@ -60,7 +62,6 @@ $app->get('/api', function (Request $request, Response $response) {
     $response->getBody()->write(json_encode([
         'message' => '/api => API de Shopper Funcionando correctamente ip :' . $request->getServerParams()['REMOTE_ADDR'] .' '. $request->getUri()
     ]));
-
     return $response;
 });
 
@@ -73,7 +74,17 @@ $app->group('/api/session', function ($group) {
     Session::getRoutes($group);
 });
 
+$app->group('/api/carrito', function ($group) {
+    Carrito::getRoutes($group);
+});
 
+$app->group('/api/carrito', function ($group) {
+    Carrito::getRoutes($group);
+});
+
+$app->group('/api/productos', function ($group) {
+    Productos::getRoutes($group);
+});
 
 
 
