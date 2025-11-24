@@ -78,14 +78,9 @@ $app->group('/api/carrito', function ($group) {
     Carrito::getRoutes($group);
 });
 
-$app->group('/api/carrito', function ($group) {
-    Carrito::getRoutes($group);
-});
-
 $app->group('/api/productos', function ($group) {
     Productos::getRoutes($group);
 });
-
 
 
 $app->run();

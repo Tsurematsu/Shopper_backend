@@ -1,4 +1,6 @@
 <?php
+namespace App\Helpers;
+
 
 class PasswordHelper {
     private static $secretKey = null;

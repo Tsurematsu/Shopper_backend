@@ -1,4 +1,6 @@
 <?php
+namespace App\Helpers;
+
 
 class JWTHelper {
     private static $secretKey = null;
