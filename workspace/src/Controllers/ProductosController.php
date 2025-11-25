@@ -54,10 +54,11 @@ class ProductosController
 
         foreach ($productos as $p) {
             $resultado[] = [
+                'id' => $p->id, // ← agregado
                 'titulo' => $p->titulo,
                 'descripcion' => $p->descripcion,
-                'imgenUrl' => $p->imagen_url, // ojo: nombre que pediste
-                'precioUnitairo' => $p->precio_unitario,
+                'imagenUrl' => $p->imagen_url,
+                'precioUnitario' => $p->precio_unitario,
                 'costoEnvio' => $p->costo_envio,
                 'cantidad' => $p->cantidad,
                 'calificacion' => $p->calificacion
@@ -67,6 +68,7 @@ class ProductosController
         $response->getBody()->write(json_encode($resultado));
         return $response->withHeader('Content-Type', 'application/json');
     }
+
 
     public function getOne(Request $request, Response $response, $args)
     {
@@ -109,7 +111,30 @@ class ProductosController
 
     public function update(Request $request, Response $response, $args)
     {
+        $id = $args['id'] ?? null;
+        $data = json_decode($request->getBody()->getContents());
+
+        $producto = \App\Models\Producto::find($id);
+
+        if (!$producto) {
+            $response->getBody()->write(json_encode(false));
+            return $response->withHeader('Content-Type', 'application/json');
+        }
+
+        $producto->update([
+            'titulo' => $data->titulo ?? $producto->titulo,
+            'descripcion' => $data->descripcion ?? $producto->descripcion,
+            'imagen_url' => $data->imagen_url ?? $producto->imagen_url,
+            'precio_unitario' => $data->precio_unitario ?? $producto->precio_unitario,
+            'costo_envio' => $data->costo_envio ?? $producto->costo_envio,
+            'cantidad' => $data->cantidad ?? $producto->cantidad,
+            'calificacion' => $data->calificacion ?? $producto->calificacion,
+        ]);
+
+        $response->getBody()->write(json_encode(true));
+        return $response->withHeader('Content-Type', 'application/json');
     }
+
 
 }
 
