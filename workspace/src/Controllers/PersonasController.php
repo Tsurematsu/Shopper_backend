@@ -10,9 +10,26 @@ class PersonasController
     public function index(Request $request, Response $response)
     {
         $response->getBody()->write(json_encode([
-            'message' => 'Hola, esta es una prueba de la ruta /api/personas'
+            [
+                'titulo' => 'Kit Pesas 20 Mancuernas Magnux KG',
+                'descripcion' => 'Ahora realizar tu rutina de ejercicio será más fácil, ya que cuentas con uno de los mejores set de mancuernas calidad/precio.',
+                'imgenUrl' => 'https://http2.mlstatic.com/D_NQ_NP_2X_750964-MLA95494678340_102025-F.webp',
+                'precioUnitairo' => '10000',
+                'costoEnvio' => '110000',
+                'cantidad' => '3',
+                'calificacion' => '4'
+            ],
+            [
+                'titulo' => 'Colchoneta Magnux Yoga Pilates Mat Tapete Ejercicios 10mm De Grosor',
+                'descripcion' => 'Ideal para sesiones de yoga, pilates, estiramientos, meditación y otros ejercicios de fortalecimiento.',
+                'imgenUrl' => 'https://http2.mlstatic.com/D_Q_NP_859732-MLA95671233684_102025-F.webp',
+                'precioUnitairo' => '12000',
+                'costoEnvio' => '11000',
+                'cantidad' => '3',
+                'calificacion' => '4.5'
+            ]
         ]));
-        return $response->withHeader('Content-Type', 'application/json');
+        return $response;
     }
 
     public function registrarPersona(Request $request, Response $response, $args)
@@ -25,7 +42,7 @@ class PersonasController
             $response->getBody()->write(json_encode([
                 'error' => 'Los campos email, usuario y contrasena son obligatorios.'
             ]));
-            return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+            return $response;
         }
 
         // Validar email repetido
@@ -33,7 +50,7 @@ class PersonasController
             $response->getBody()->write(json_encode([
                 'error' => 'El email ya está registrado.'
             ]));
-            return $response->withStatus(409)->withHeader('Content-Type', 'application/json');
+            return $response;
         }
 
         // Validar usuario repetido
@@ -41,25 +58,25 @@ class PersonasController
             $response->getBody()->write(json_encode([
                 'error' => 'El usuario ya está registrado.'
             ]));
-            return $response->withStatus(409)->withHeader('Content-Type', 'application/json');
+            return $response;
         }
 
         // Crear persona
         $persona = Persona::create([
-            'email'      => $data->email,
-            'usuario'    => $data->usuario,
+            'email' => $data->email,
+            'usuario' => $data->usuario,
             'contrasena' => password_hash($data->contrasena, PASSWORD_BCRYPT),
-            'is_admin'   => $data->is_admin ?? false
+            'is_admin' => $data->is_admin ?? false
         ]);
 
         // Respuesta de éxito
         $response->getBody()->write(json_encode([
             'message' => 'Persona registrada exitosamente.',
             'persona' => [
-                'id'      => $persona->id,
-                'email'   => $persona->email,
+                'id' => $persona->id,
+                'email' => $persona->email,
                 'usuario' => $persona->usuario,
-                'is_admin'=> $persona->is_admin
+                'is_admin' => $persona->is_admin
             ]
         ]));
 
@@ -82,14 +99,14 @@ class PersonasController
 
         if (!$persona) {
             // Usuario no encontrado
-            $response->getBody()->write(json_encode(["error"=>false]));
+            $response->getBody()->write(json_encode(["error" => false]));
             return $response;
         }
 
         // Verificar contraseña
         if (!password_verify($data->contrasena, $persona->contrasena)) {
             // Contraseña incorrecta
-            $response->getBody()->write(json_encode(["error"=>false]));
+            $response->getBody()->write(json_encode(["error" => false]));
             return $response;
         }
 
@@ -103,10 +120,8 @@ class PersonasController
 
 }
 
-
-
 // $data = json_decode($request->getBody());
-        
+
 //         $user = User::create([
 //             'name' => $data->name,
 //             'email' => $data->email,
