@@ -65,6 +65,30 @@ $app->get('/api', function (Request $request, Response $response) {
     return $response;
 });
 
+$app->get('/api/testProducts', function (Request $request, Response $response) {
+    $response->getBody()->write(json_encode([
+        [
+            'titulo'=>'Kit Pesas 20 Mancuernas Magnux KG',
+            'descripcion'=>'Ahora realizar tu rutina de ejercicio será más fácil, ya que cuentas con uno de los mejores set de mancuernas calidad/precio.',
+            'imgenUrl' =>'https://http2.mlstatic.com/D_NQ_NP_2X_750964-MLA95494678340_102025-F.webp',
+            'precioUnitairo' =>'10000',
+            'costoEnvio' =>'110000',
+            'cantidad' =>'3',
+            'calificacion' =>'4'
+        ],
+        [
+            'titulo'=>'Colchoneta Magnux Yoga Pilates Mat Tapete Ejercicios 10mm De Grosor',
+            'descripcion'=>'Ideal para sesiones de yoga, pilates, estiramientos, meditación y otros ejercicios de fortalecimiento.',
+            'imgenUrl' =>'https://http2.mlstatic.com/D_Q_NP_859732-MLA95671233684_102025-F.webp',
+            'precioUnitairo' =>'12000',
+            'costoEnvio' =>'11000',
+            'cantidad' =>'3',
+            'calificacion' =>'4.5'
+        ]
+    ]));
+    return $response;
+});
+
 // Cargar rutas de Personas usando el método estático
 $app->group('/api/personas', function ($group) {
     Personas::getRoutes($group);
