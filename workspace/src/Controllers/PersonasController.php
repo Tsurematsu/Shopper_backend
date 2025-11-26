@@ -15,7 +15,7 @@ class PersonasController
                 'descripcion' => 'Ahora realizar tu rutina de ejercicio será más fácil, ya que cuentas con uno de los mejores set de mancuernas calidad/precio.',
                 'imgenUrl' => 'https://http2.mlstatic.com/D_NQ_NP_2X_750964-MLA95494678340_102025-F.webp',
                 'precioUnitairo' => '10000',
-                'costoEnvio' => '110000',
+                'costoEnvio' => '11000',
                 'cantidad' => '3',
                 'calificacion' => '4'
             ],
@@ -38,12 +38,17 @@ class PersonasController
         $data = json_decode($request->getBody()->getContents());
 
         // Validaciones mínimas
-        if (!isset($data->email) || !isset($data->usuario) || !isset($data->contrasena)) {
+        if (
+            !isset($data->email) || empty(trim($data->email)) ||
+            !isset($data->usuario) || empty(trim($data->usuario)) ||
+            !isset($data->contrasena) || empty(trim($data->contrasena))
+        ) {
             $response->getBody()->write(json_encode([
-                'error' => 'Los campos email, usuario y contrasena son obligatorios.'
+                'error' => 'Los campos email, usuario y contrasena son obligatorios y no pueden estar vacíos.'
             ]));
             return $response;
         }
+
 
         // Validar email repetido
         if (Persona::where('email', $data->email)->exists()) {
@@ -112,7 +117,10 @@ class PersonasController
 
         // Login correcto → retornar el ID
         $response->getBody()->write(json_encode([
-            'id' => $persona->id
+            'id' => $persona->id,
+            'email'=> $persona->email,
+            'usuario' => $persona->usuario,
+            'isAdmin' => $persona->is_admin,
         ]));
 
         return $response;
