@@ -10,5 +10,6 @@ class Personas {
         $group->get('/test', [$controller, 'index']);
         $group->post('/register', [$controller, 'registrarPersona']);
         $group->post('/login', [$controller, 'login']);
+        $group->get('/obtenerPersona/{id}', [$controller, 'obtenerPorId']);
      } 
 }

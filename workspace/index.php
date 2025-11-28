@@ -23,13 +23,6 @@ $app->post('/api/upload', function (Request $request, Response $response) {
         if (!isset($uploadedFiles['archivo'])) {throw new \Exception('No se envió ningún archivo');}
         $uploader = new FileUploader();
         $resultado = $uploader->upload($uploadedFiles['archivo']);
-        // Aquí puedes guardar la info en la base de datos
-        // DB::table('archivos')->insert([
-        //     'nombre_original' => $resultado['original_name'],
-        //     'nombre_guardado' => $resultado['filename'],
-        //     'ruta' => $resultado['path'],
-        //     'created_at' => date('Y-m-d H:i:s')
-        // ]);
         $response->getBody()->write(json_encode($resultado));
         return $response;
     } catch (\Exception $e) {

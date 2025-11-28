@@ -9,26 +9,7 @@ class PersonasController
 {
     public function index(Request $request, Response $response)
     {
-        $response->getBody()->write(json_encode([
-            [
-                'titulo' => 'Kit Pesas 20 Mancuernas Magnux KG',
-                'descripcion' => 'Ahora realizar tu rutina de ejercicio será más fácil, ya que cuentas con uno de los mejores set de mancuernas calidad/precio.',
-                'imgenUrl' => 'https://http2.mlstatic.com/D_NQ_NP_2X_750964-MLA95494678340_102025-F.webp',
-                'precioUnitairo' => '10000',
-                'costoEnvio' => '11000',
-                'cantidad' => '3',
-                'calificacion' => '4'
-            ],
-            [
-                'titulo' => 'Colchoneta Magnux Yoga Pilates Mat Tapete Ejercicios 10mm De Grosor',
-                'descripcion' => 'Ideal para sesiones de yoga, pilates, estiramientos, meditación y otros ejercicios de fortalecimiento.',
-                'imgenUrl' => 'https://http2.mlstatic.com/D_Q_NP_859732-MLA95671233684_102025-F.webp',
-                'precioUnitairo' => '12000',
-                'costoEnvio' => '11000',
-                'cantidad' => '3',
-                'calificacion' => '4.5'
-            ]
-        ]));
+        $response->getBody()->write(json_encode("Endtpoint funcionando"));
         return $response;
     }
 
@@ -126,13 +107,144 @@ class PersonasController
         return $response;
     }
 
+    // Método para obtener todas las personas
+    public function obtenerTodas(Request $request, Response $response)
+    {
+        // Eloquent: Obtener todos los registros
+        $personas = Persona::all();
+
+        // Escribir respuesta
+        $response->getBody()->write(json_encode($personas));
+        
+        // Es buena práctica añadir el header Content-Type
+        return $response->withHeader('Content-Type', 'application/json');
+    }
+
+    // Método para obtener una persona por ID
+    public function obtenerPorId(Request $request, Response $response, $args)
+    {
+        // Obtener el ID de la URL (definido en la ruta como {id})
+        $id = $args['id'];
+
+        // Eloquent: Buscar por ID
+        $persona = Persona::find($id);
+
+        // Validar si existe
+        if (!$persona) {
+            $response->getBody()->write(json_encode([
+                'error' => 'Persona no encontrada'
+            ]));
+            return $response
+                ->withStatus(404) // Retornar error 404 Not Found
+                ->withHeader('Content-Type', 'application/json');
+        }
+
+        // Si existe, devolver el objeto
+        $response->getBody()->write(json_encode($persona));
+        
+        return $response->withHeader('Content-Type', 'application/json');
+    }
+
+    public function actualizarPersona(Request $request, Response $response, $args)
+    {
+        $id = $args['id'];
+        
+        // 1. Buscar la persona
+        $persona = Persona::find($id);
+
+        if (!$persona) {
+            $response->getBody()->write(json_encode(['error' => 'Persona no encontrada']));
+            return $response->withStatus(404)->withHeader('Content-Type', 'application/json');
+        }
+
+        // 2. Obtener datos del body
+        $data = json_decode($request->getBody()->getContents());
+
+        // --- ACTUALIZAR USUARIO (si se envía) ---
+        if (isset($data->usuario) && !empty(trim($data->usuario))) {
+            // Si el usuario es diferente al actual, verificar que no esté repetido en la BD
+            if ($data->usuario !== $persona->usuario) {
+                if (Persona::where('usuario', $data->usuario)->exists()) {
+                    $response->getBody()->write(json_encode(['error' => 'El nombre de usuario ya está en uso.']));
+                    return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+                }
+                $persona->usuario = trim($data->usuario);
+            }
+        }
+
+        // --- ACTUALIZAR EMAIL (si se envía) ---
+        if (isset($data->email) && !empty(trim($data->email))) {
+            // Si el email es diferente al actual, verificar duplicados
+            if ($data->email !== $persona->email) {
+                if (Persona::where('email', $data->email)->exists()) {
+                    $response->getBody()->write(json_encode(['error' => 'El email ya está registrado por otra persona.']));
+                    return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+                }
+                $persona->email = trim($data->email);
+            }
+        }
+
+        // --- ACTUALIZAR CONTRASEÑA ---
+        // Requiere enviar "contrasena_actual" y "nueva_contrasena"
+        if (isset($data->contrasena_actual) && isset($data->nueva_contrasena)) {
+            // Verificar que no estén vacías
+            if (!empty(trim($data->contrasena_actual)) && !empty(trim($data->nueva_contrasena))) {
+                
+                // 1. Validar que la contraseña actual sea correcta
+                if (!password_verify($data->contrasena_actual, $persona->contrasena)) {
+                    $response->getBody()->write(json_encode(['error' => 'La contraseña actual es incorrecta.']));
+                    return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
+                }
+
+                // 2. Encriptar y guardar la nueva
+                $persona->contrasena = password_hash($data->nueva_contrasena, PASSWORD_BCRYPT);
+            }
+        }
+
+        // --- ACTUALIZAR ADMIN (Opcional) ---
+        if (isset($data->is_admin)) {
+            $persona->is_admin = $data->is_admin;
+        }
+
+        // 3. Guardar cambios en la base de datos
+        // Eloquent es inteligente: si no hubo cambios, save() no hace nada.
+        $persona->save();
+
+        $response->getBody()->write(json_encode([
+            'message' => 'Persona actualizada exitosamente',
+            'persona' => $persona
+        ]));
+
+        return $response->withHeader('Content-Type', 'application/json');
+    }
+
+    public function eliminarPersona(Request $request, Response $response, $args)
+    {
+        $id = $args['id'];
+
+        // 1. Buscar la persona
+        $persona = Persona::find($id);
+
+        // 2. Validar si existe
+        if (!$persona) {
+            $response->getBody()->write(json_encode([
+                'error' => 'Persona no encontrada, no se pudo eliminar.'
+            ]));
+            return $response
+                ->withStatus(404)
+                ->withHeader('Content-Type', 'application/json');
+        }
+
+        // 3. Eliminar el registro
+        $persona->delete();
+
+        // 4. Respuesta de éxito
+        $response->getBody()->write(json_encode([
+            'message' => 'Persona eliminada exitosamente.',
+            'id_eliminado' => $id
+        ]));
+
+        return $response->withHeader('Content-Type', 'application/json');
+    }
+
 }
-
-// $data = json_decode($request->getBody());
-
-//         $user = User::create([
-//             'name' => $data->name,
-//             'email' => $data->email,
-//             'hash_password' => password_hash($data->password, PASSWORD_BCRYPT),
-//             'is_admin' => $data->is_admin ?? false
-//         ]);
