@@ -11,5 +11,7 @@ class Personas {
         $group->post('/register', [$controller, 'registrarPersona']);
         $group->post('/login', [$controller, 'login']);
         $group->get('/obtenerPersona/{id}', [$controller, 'obtenerPorId']);
+        $group->post('/actualizarPersona/{id}', [$controller, 'actualizarPersona']);
+        $group->get('/eliminarPersona/{id}', [$controller, 'eliminarPersona']);
      } 
 }
