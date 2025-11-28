@@ -8,10 +8,11 @@ class Productos {
      public static function getRoutes(RouteCollectorProxy $group){
         $controller = new ProductosController();
 
-        $group->get('', [$controller, 'index']);           // GET /api/users
-        // $group->get('/{id}', [$controller, 'show']);       // GET /api/users/1
-        // $group->post('', [$controller, 'store']);          // POST /api/users
-        // $group->put('/{id}', [$controller, 'update']);     // PUT /api/users/1
-        // $group->delete('/{id}', [$controller, 'delete']);  // DELETE /api/users/1
+        $group->get('', [$controller, 'index']);
+        $group->post('/addproduct', [$controller, 'add']);
+        $group->get('/getProductos', [$controller, 'get']);
+        $group->get('/deleteProductos', [$controller, 'delete']);
+        $group->get('/getProduct/{id}', [$controller, 'getOne']);
+        $group->post('/updateProduct/{id}', [$controller, 'update']);
      } 
 }

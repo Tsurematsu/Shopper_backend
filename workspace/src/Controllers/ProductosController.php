@@ -20,7 +20,7 @@ class ProductosController
         $data = json_decode($request->getBody()->getContents());
 
         // Validaciones básicas
-        if (!isset($data->titulo) || !isset($data->precio_unitario)) {
+        if (!isset($data->titulo) || !isset($data->precioUnitairo)) {
             $response->getBody()->write(json_encode([
                 'error' => 'El campo titulo y precio_unitario son obligatorios.'
             ]));
@@ -30,9 +30,9 @@ class ProductosController
         $producto = \App\Models\Producto::create([
             'titulo' => $data->titulo,
             'descripcion' => $data->descripcion ?? '',
-            'imagen_url' => $data->imagen_url ?? '',
-            'precio_unitario' => $data->precio_unitario,
-            'costo_envio' => $data->costo_envio ?? 0,
+            'imagen_url' => $data->imagenUrl ?? '',
+            'precio_unitario' => $data->precioUnitairo,
+            'costo_envio' => $data->costoEnvio ?? 0,
             'cantidad' => $data->cantidad ?? 0,
             'calificacion' => $data->calificacion ?? null,
         ]);
@@ -124,15 +124,15 @@ class ProductosController
         $producto->update([
             'titulo' => $data->titulo ?? $producto->titulo,
             'descripcion' => $data->descripcion ?? $producto->descripcion,
-            'imagen_url' => $data->imagen_url ?? $producto->imagen_url,
-            'precio_unitario' => $data->precio_unitario ?? $producto->precio_unitario,
-            'costo_envio' => $data->costo_envio ?? $producto->costo_envio,
+            'imagen_url' => $data->imagenUrl ?? $producto->imagen_url,
+            'precio_unitario' => $data->precioUnitairo ?? $producto->precio_unitario,
+            'costo_envio' => $data->costoEnvio ?? $producto->costo_envio,
             'cantidad' => $data->cantidad ?? $producto->cantidad,
             'calificacion' => $data->calificacion ?? $producto->calificacion,
         ]);
 
         $response->getBody()->write(json_encode(true));
-        return $response->withHeader('Content-Type', 'application/json');
+        return $response;
     }
 
 
