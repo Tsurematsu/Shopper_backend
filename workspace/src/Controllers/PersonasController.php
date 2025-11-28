@@ -117,7 +117,7 @@ class PersonasController
         $response->getBody()->write(json_encode($personas));
         
         // Es buena práctica añadir el header Content-Type
-        return $response->withHeader('Content-Type', 'application/json');
+        return $response;
     }
 
     // Método para obtener una persona por ID
@@ -134,15 +134,13 @@ class PersonasController
             $response->getBody()->write(json_encode([
                 'error' => 'Persona no encontrada'
             ]));
-            return $response
-                ->withStatus(404) // Retornar error 404 Not Found
-                ->withHeader('Content-Type', 'application/json');
+            return $response;
         }
 
         // Si existe, devolver el objeto
         $response->getBody()->write(json_encode($persona));
         
-        return $response->withHeader('Content-Type', 'application/json');
+        return $response;
     }
 
     public function actualizarPersona(Request $request, Response $response, $args)
@@ -154,7 +152,7 @@ class PersonasController
 
         if (!$persona) {
             $response->getBody()->write(json_encode(['error' => 'Persona no encontrada']));
-            return $response->withStatus(404)->withHeader('Content-Type', 'application/json');
+            return $response;
         }
 
         // 2. Obtener datos del body
@@ -166,7 +164,7 @@ class PersonasController
             if ($data->usuario !== $persona->usuario) {
                 if (Persona::where('usuario', $data->usuario)->exists()) {
                     $response->getBody()->write(json_encode(['error' => 'El nombre de usuario ya está en uso.']));
-                    return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+                    return $response;
                 }
                 $persona->usuario = trim($data->usuario);
             }
@@ -178,7 +176,7 @@ class PersonasController
             if ($data->email !== $persona->email) {
                 if (Persona::where('email', $data->email)->exists()) {
                     $response->getBody()->write(json_encode(['error' => 'El email ya está registrado por otra persona.']));
-                    return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+                    return $response;
                 }
                 $persona->email = trim($data->email);
             }
@@ -193,7 +191,7 @@ class PersonasController
                 // 1. Validar que la contraseña actual sea correcta
                 if (!password_verify($data->contrasena_actual, $persona->contrasena)) {
                     $response->getBody()->write(json_encode(['error' => 'La contraseña actual es incorrecta.']));
-                    return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
+                    return $response;
                 }
 
                 // 2. Encriptar y guardar la nueva
@@ -215,7 +213,7 @@ class PersonasController
             'persona' => $persona
         ]));
 
-        return $response->withHeader('Content-Type', 'application/json');
+        return $response;
     }
 
     public function eliminarPersona(Request $request, Response $response, $args)
@@ -230,9 +228,7 @@ class PersonasController
             $response->getBody()->write(json_encode([
                 'error' => 'Persona no encontrada, no se pudo eliminar.'
             ]));
-            return $response
-                ->withStatus(404)
-                ->withHeader('Content-Type', 'application/json');
+            return $response;
         }
 
         // 3. Eliminar el registro
@@ -244,7 +240,7 @@ class PersonasController
             'id_eliminado' => $id
         ]));
 
-        return $response->withHeader('Content-Type', 'application/json');
+        return $response;
     }
 
 }
