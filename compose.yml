@@ -18,7 +18,7 @@ services:
     tty: true
 
   postgres:
-    image: postgres:15-alpine
+    image: docker.io/library/postgres:15-alpine
     container_name: postgres-db-shopper
     ports:
       - "5432:5432"
